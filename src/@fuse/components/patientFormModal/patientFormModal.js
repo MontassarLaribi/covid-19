@@ -283,11 +283,11 @@ const PatientFormModal = ({
                     color="primary"
                     disabled={isSubmitting}
                     onClick={() => {
-                     // if (staticCount === dynamicCount) {
+                      if (staticCount === dynamicCount) {
                         submitForm();
-                     // } else {
-                     //   alert("Merci de répondre à toutes les questions");
-                    //  }
+                      } else {
+                        alert("Merci de répondre à toutes les questions");
+                      }
                     }}
                   >
                     Valider

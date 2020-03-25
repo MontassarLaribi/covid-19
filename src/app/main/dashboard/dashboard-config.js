@@ -26,7 +26,7 @@ export const BoardConfig = {
   auth  : authRoles.onlyGuest,
   routes: [
     {
-      path: "/dashboard",
+      path: "/docteur",
       component: Dashboard
     }
   ]

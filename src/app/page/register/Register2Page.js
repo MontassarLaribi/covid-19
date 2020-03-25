@@ -39,7 +39,7 @@ function UpperCasingTextField(props) {
   const onChange = React.useCallback(
     event => {
       const { value } = event.target;
-      setFieldValue(name, value ? value.toUpperCase() : "");
+      setFieldValue(name, value ? value : "");
     },
     [setFieldValue, name]
   );
@@ -59,6 +59,7 @@ const Login = props => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   console.log("props", props);
+  const userLoged=props.location.state && props.location.state.type
   return (
     <div className="login-page">
       <div className="main-navbar">
@@ -75,7 +76,7 @@ const Login = props => {
         </div>
       </div>
       <div className="login-text">
-        <h1>Connectez-vous pour accéder à l'espace docteur</h1>
+        <h1>Connectez-vous pour accéder à l'espace {props.location.state&&props.location.state.type}</h1>
         <h4>
           Cet espace vous permet de voir les demandes envoyées par les patients
           et les traiter chronologiquement.
@@ -109,7 +110,11 @@ const Login = props => {
           console.log("values", values);
           setSubmitting(false);
           submitLogin(values).then(res => {
-            props.history.push("/dashboard");
+            if(userLoged){
+              props.history.push(`${userLoged}`);
+            }else{
+              alert('user unknown')
+            }
           });
         }}
         render={({

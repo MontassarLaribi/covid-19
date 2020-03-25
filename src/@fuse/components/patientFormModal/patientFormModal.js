@@ -39,7 +39,7 @@ const PatientFormModal = ({
     modalAction(id);
   };
 
-  function UpperCasingTextField(props) {
+/*   function UpperCasingTextField(props) {
     const {
       form: { setFieldValue },
       field: { name }
@@ -61,7 +61,7 @@ const PatientFormModal = ({
         onChange={onChange}
       />
     );
-  }
+  } */
   const getAllState = data => {
     updateResponse(data);
   };
@@ -77,7 +77,7 @@ const PatientFormModal = ({
           dataModal.map(el => {
             return (
               <div className="question-list">
-                <h4>{el.section}</h4>
+                <h4>{el.label}</h4>
                 {el.questions.map((elem, i) => (
                   <QuestionEducation
                     index={i}
@@ -91,7 +91,7 @@ const PatientFormModal = ({
               </div>
             );
           })}
-        <h4 className="personnal-question-title">3- Données Personnelles</h4>
+        <h4 className="personnal-question-title">Données Personnelles</h4>
         <Formik
           initialValues={{
             email: "",

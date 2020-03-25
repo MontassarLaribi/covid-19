@@ -20,17 +20,36 @@ export const getAllPatients = async () => {
   return response;
 };
 
-export const patchPatient = async (status, guid) => {
-  console.log("guid,status", guid,status);
-  if(guid){
+export const patchPatientByDoc = async (status, guid) => {
+  if (guid) {
     const response = await axios
-    .patch(`https://api.ensembletn.beecoop.co/api/v1/secured/patient/${guid}`, {
-      flag: status
-    })
-    .catch(err => {
-      //alert(err)
-      throw new Error(err);
-    });
+      .patch(
+        `https://api.ensembletn.beecoop.co/api/v1/secured/patient/${guid}`,
+        {
+          flag: status
+        }
+      )
+      .catch(err => {
+        //alert(err)
+        throw new Error(err);
+      });
+    return response;
+  }
+};
+
+export const patchPatientBySAMU = async guid => {
+  if (guid) {
+    const response = await axios
+      .patch(
+        `https://api.ensembletn.beecoop.co/api/v1/secured/patient/${guid}`,
+        {
+          emergencyStatus: "CLOSED"
+        }
+      )
+      .catch(err => {
+        //alert(err)
+        throw new Error(err);
+      });
     return response;
   }
 };

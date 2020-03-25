@@ -11,8 +11,6 @@ import {
 } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 
-//STABLE / SUSPECT / URGENT
-
 import ellipse from "../ellipse.svg";
 import group from "../group.svg";
 
@@ -81,7 +79,7 @@ const ClaimDialog = ({
         return "stable-active";
 
       default:
-        break;
+        return "urgent-active";
     }
   };
 
@@ -106,7 +104,7 @@ const ClaimDialog = ({
           return "oui";
 
         default:
-          break;
+          return "neutre";
       }
     } else {
       switch (value) {
@@ -117,7 +115,7 @@ const ClaimDialog = ({
           return "oui";
 
         default:
-          break;
+          return "N/A";
       }
     }
   };
@@ -279,7 +277,7 @@ const ClaimDialog = ({
                   onClick={() =>
                     condition === "critique"
                       ? setCondition(null)
-                      : setCondition("SUSPECT")
+                      : setCondition("critique")
                   }
                 >
                   critique

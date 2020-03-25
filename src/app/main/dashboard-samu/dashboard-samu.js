@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Button, Container, Grid } from "@material-ui/core";
 import { get } from "lodash";
 
-import { getPatient, getAllPatients, patchPatientByDoc } from "app/libs/apis";
+import { getPatient, getAllPatients, patchPatientBySAMU } from "app/libs/apis";
 
 import ClaimDialog from "./components/claim-dialog";
 
-import "./dashboard.scss";
+import "./dashboard-samu.scss";
 
 const listOfStatus = ["non-traité", "en cours de traitement", "traité"];
 
-const Dashboard = () => {
+const DashboardSAMU = () => {
   const [visible, setVisible] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [patient, setPatient] = useState({});
@@ -70,7 +70,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <Container maxWidth="md">
         <header>
-          <h2>Bienvenue au dashboard du corp médical!</h2>
+          <h2>Bienvenue au dashboard de Samu</h2>
           <p>Cliquez sur "traiter un dossier" pour traiter un patient</p>
 
           <Button
@@ -82,7 +82,7 @@ const Dashboard = () => {
               setVisible(true);
               getPatient().then(res => {
                 setPatient(get(res, "data.payload.patient", {}));
-                /* patchPatientByDoc(
+                /* patchPatientBySAMU(
                   "IN_PROGRESS",
                   get(res, "data.payload.patient.guid")
                 );  */
@@ -107,9 +107,8 @@ const Dashboard = () => {
               });
             }}
             onSendSMS={condition => {
-              //add dynamic status flag
               setIsSent(true);
-              patchPatientByDoc(condition.toUpperCase(), patient.guid);
+              patchPatientBySAMU(condition.toUpperCase(), patient.guid);
               getAllPatients().then(res => {
                 setAllPatients(get(res, "data.payload.patients", {}));
               });
@@ -127,4 +126,4 @@ const Dashboard = () => {
     </div>
   );
 };
-export default Dashboard;
+export default DashboardSAMU;

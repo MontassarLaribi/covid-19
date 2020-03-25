@@ -117,10 +117,13 @@ const Dashboard = () => {
             onClickNext={() => {
               setIsSent(false);
               getPatient().then(res => {
-                setPatient(get(res, "data.payload.patient.0", {}));
+                setPatient(get(res, "data.payload.patient", {}));
               });
             }}
             patient={patient}
+            allPatientsCount={
+              allPatients ? allPatients["ON_HOLD"].patients.length : 0
+            }
           />
         )}
       </Container>

@@ -25,11 +25,10 @@ export function submitLogin({email, password})
 
                dispatch(setUserData(userConfig));
 
-               console.log('in userConfig', userConfig)
                dispatch({
                     type: LOGIN_SUCCESS
                 });
-                console.log('out userConfig', userConfig)
+   
                 return userConfig
             }
         )

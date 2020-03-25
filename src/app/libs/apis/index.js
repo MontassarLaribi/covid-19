@@ -1,8 +1,9 @@
 import axios from "axios";
+import {DOMAINE} from "config"
 
 export const getPatient = async () => {
   const response = await axios
-    .get("https://api.ensembletn.beecoop.co/api/v1/secured/treat-patient")
+    .get(`${DOMAINE}/api/v1/secured/treat-patient`)
     .catch(err => {
       throw new Error(err);
     });
@@ -12,7 +13,7 @@ export const getPatient = async () => {
 
 export const getAllPatients = async () => {
   const response = await axios
-    .get("https://api.ensembletn.beecoop.co/api/v1/secured/patient")
+    .get(`${DOMAINE}/api/v1/secured/patient`)
     .catch(err => {
       throw new Error(err);
     });
@@ -24,7 +25,7 @@ export const patchPatientByDoc = async (status, guid) => {
   if (guid) {
     const response = await axios
       .patch(
-        `https://api.ensembletn.beecoop.co/api/v1/secured/patient/${guid}`,
+        `${DOMAINE}/api/v1/secured/patient/${guid}`,
         {
           flag: status
         }
@@ -41,7 +42,7 @@ export const patchPatientBySAMU = async guid => {
   if (guid) {
     const response = await axios
       .patch(
-        `https://api.ensembletn.beecoop.co/api/v1/secured/patient/${guid}`,
+        `${DOMAINE}/api/v1/secured/patient/${guid}`,
         {
           emergencyStatus: "CLOSED"
         }

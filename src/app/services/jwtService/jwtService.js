@@ -1,7 +1,7 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import FuseUtils from "@fuse/FuseUtils";
-
+import {DOMAINE} from "config"
 class jwtService extends FuseUtils.EventEmitter {
   init() {
     this.setInterceptors();
@@ -62,12 +62,11 @@ class jwtService extends FuseUtils.EventEmitter {
   signInWithEmailAndPassword = (email, password) => {
     return new Promise((resolve, reject) => {
       axios
-        .post("https://api.ensembletn.beecoop.co/api/v1/security/login-check", {
+        .post(`${DOMAINE}/api/v1/security/login-check`, {
           email,
           password
         })
         .then(response => {
-          console.log("response", response);
           if (response.data.code === 200) {
             const user = parseJwt(response.data.payload.token);
             this.setSession(response.data.payload.token);

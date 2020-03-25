@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   Grid,
@@ -9,7 +9,6 @@ import {
   InputLabel,
   Divider
 } from "@material-ui/core";
-import { Send } from "@material-ui/icons";
 
 //STABLE / SUSPECT / URGENT
 
@@ -40,13 +39,12 @@ const ClaimDialog = ({
   onClose,
   onSendSMS,
   onClickNext,
-  patient
+  patient,
+  allPatientsCount
 }) => {
   const [response, setResponse] = useState("");
   const [open, setOpen] = useState(false);
   const [condition, setCondition] = useState(null);
-
-  useEffect(() => {}, []);
 
   console.log("patient", patient);
 
@@ -86,39 +84,15 @@ const ClaimDialog = ({
   };
 
   const renderValue = (value, type) => {
-    if (type === 1) {
-      switch (value) {
-        case "0":
-          return "non";
+    switch (value) {
+      case "0":
+        return "non";
 
-        case "1":
-          return "oui";
+      case "1":
+        return "oui";
 
-        default:
-          break;
-      }
-    } else if (type === 2) {
-      switch (value) {
-        case "0":
-          return "non";
-
-        case "1":
-          return "oui";
-
-        default:
-          break;
-      }
-    } else {
-      switch (value) {
-        case "0":
-          return "non";
-
-        case "1":
-          return "oui";
-
-        default:
-          break;
-      }
+      default:
+        break;
     }
   };
 
@@ -127,7 +101,7 @@ const ClaimDialog = ({
       return (
         <div className="single-question">
           <p> {q.question.fr_value}</p>
-          {[1, 2, 3].indexOf(q.question.type) >= 0 && (
+          {q.question.type === 1 && (
             <Button
               variant="outlined"
               disabled
@@ -136,7 +110,7 @@ const ClaimDialog = ({
               {renderValue(q.response.value, q.question.type)}
             </Button>
           )}
-          {q.question.type === 4 && (
+          {q.question.type === 2 && (
             <TextField
               id={q.question.id}
               className="question-textfield"
@@ -322,13 +296,15 @@ const ClaimDialog = ({
             <Button variant="outlined" size="small" onClick={onClose}>
               revenir au dashboard
             </Button>
-            <Button
-              className="issent-actions-btn"
-              size="large"
-              onClick={onClickNext}
-            >
-              traiter le dossier suivant
-            </Button>
+            {allPatientsCount > 0 && (
+              <Button
+                className="issent-actions-btn"
+                size="large"
+                onClick={onClickNext}
+              >
+                traiter le dossier suivant
+              </Button>
+            )}
           </div>
         </div>
       )}

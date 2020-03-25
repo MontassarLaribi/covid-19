@@ -8,6 +8,7 @@ import { WelcomeCard, PatientFormModal, InformModal } from "@fuse";
 import { connect } from "react-redux";
 import { ModalAction, addInformer } from "app/store/actions";
 import { makeStyles } from "@material-ui/core/styles";
+import {DOMAINE} from "config"
 
 import Sms from "./sms"
 
@@ -119,18 +120,18 @@ const Welcome = props => {
   const renderLabelCategroy = cat => {
     switch (cat) {
       case "CATEGORY_GENERAL":
-        return "Questions générale";
+        return "Questions générales";
       case "CATEGORY_SYMPTOMS":
         return "Les symptômes";
       case "CATEGORY_ANTECEDENT":
-        return "Questions médicale";
+        return "Questions médicales";
       default:
         break;
     }
   };
   useEffect(() => {
     axios
-      .get("https://api.ensembletn.beecoop.co/api/v1/question")
+      .get(`${DOMAINE}/api/v1/question`)
       .then(res => {
         if (res && res.data && res.data.payload && res.data.payload.questions) {
           let cleanData = [];
@@ -178,7 +179,7 @@ const Welcome = props => {
     const newData = { ...responses, ...data };
     console.log("newData", newData);
     axios
-      .post("https://api.ensembletn.beecoop.co/api/v1/patient", { ...newData })
+      .post(`${DOMAINE}/api/v1/patient`, { ...newData })
       .then(res =>{
         props.ModalAction("sms");
       }) 

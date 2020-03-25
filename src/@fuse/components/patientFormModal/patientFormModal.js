@@ -98,7 +98,8 @@ const PatientFormModal = ({
             nom: "",
             prenom: "",
             adresse: "",
-            tel: ""
+            mytel: "",
+            zipcode:""
           }}
           validate={values => {
             const errors = {};
@@ -120,29 +121,21 @@ const PatientFormModal = ({
             } */
             if (values.adresse === "") {
               errors.adresse = "Required";
+            }else if (values.adresse.length < 5) {
+              errors.adresse = "invalid length";
             }
 
-            if (values.adresse && values.adresse.length < 5) {
-              errors.adresse = "Required";
+            if (values.mytel === "") {
+              errors.mytel = "Required";
+            } else if (values.mytel.length <= 7) {
+              errors.mytel = "invalid length";
             }
+          
 
-            if (values.tel === "") {
-              errors.tel = "Required";
-            }
-
-            if (
-              (values.tel && values.tel.length >= 8) ||
-              !/^[0-9]*$/i.test(values.tel)
-            ) {
-              errors.tel = "Invalid phone number";
-            }
-
-            if (values.zipCode && values.zipCode.length === 4) {
-              errors.zipCode = "zip code must be 4 number";
-            }
-
-            if (values.zipCode === "") {
-              errors.zipCode = "Required";
+            if (values.zipcode === "") {
+              errors.zipcode = "Required";
+            }else if (values.zipcode.length <= 3) {
+              errors.zipcode = "zip code must be 4 number";
             }
 
             return errors;
@@ -152,8 +145,8 @@ const PatientFormModal = ({
               firstName: values.prenom,
               lastName: values.nom,
               address: values.adresse,
-              zipCode: values.zipCode,
-              phoneNumber: values.tel
+              zipCode: values.zipcode,
+              phoneNumber: values.mytel
             };
             submitFormCallback(caste);
           }}
@@ -226,9 +219,9 @@ const PatientFormModal = ({
                 >
                   <Field
                     component={TextField}
-                    type="number"
+                    type="text"
                     label="Numero de telephone"
-                    name="tel"
+                    name="mytel"
                     variant="outlined"
                     style={{
                       margin: "0 12px"
@@ -246,9 +239,9 @@ const PatientFormModal = ({
                   /> */}
                   <Field
                     component={TextField}
-                    type="number"
+                    type="text"
                     label="Zip Code"
-                    name="zipCode"
+                    name="zipcode"
                     variant="outlined"
                     style={{
                       margin: "0 12px"
@@ -290,11 +283,11 @@ const PatientFormModal = ({
                     color="primary"
                     disabled={isSubmitting}
                     onClick={() => {
-                      if (staticCount === dynamicCount) {
+                     // if (staticCount === dynamicCount) {
                         submitForm();
-                      } else {
-                        alert("Merci de répondre à toutes les questions");
-                      }
+                     // } else {
+                     //   alert("Merci de répondre à toutes les questions");
+                    //  }
                     }}
                   >
                     Valider

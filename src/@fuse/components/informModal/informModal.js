@@ -119,7 +119,7 @@ const InformModal = ({ modalAction, submitForm, history }) => {
             console.log("values", values);
             setTimeout(() => {
               setSubmitting(false);
-              alert(JSON.stringify(values, null, 2));
+             // alert(JSON.stringify(values, null, 2));
             }, 500);
           }}
           render={({
@@ -295,8 +295,8 @@ const InformModal = ({ modalAction, submitForm, history }) => {
                     color="primary"
                     disabled={isSubmitting}
                     onClick={() => {
-                      alert('Cette fonction est en cours de developpement')
-                      // submitForm();
+                      //alert('Cette fonction est en cours de developpement')
+                       submitForm();
                       handleClose();
                     }}
                   >

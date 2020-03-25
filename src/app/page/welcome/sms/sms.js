@@ -6,7 +6,7 @@ import elilpse from "./Ellipse33.svg";
 
 import "./sms.scss";
 
-const Sms =({modalAction,history})=> {
+const Sms =({modalAction,history,tel})=> {
   return (
     <Modal className="sms" id="sms" ModalAction={modalAction}>
       <img className="Ellipse" src={elilpse} />
@@ -18,7 +18,7 @@ const Sms =({modalAction,history})=> {
         <h1>SMS envoyé</h1>
         <p className="lead">
           Nous venons d'envoyer un code à six chiffres au{" "}
-          <strong>xx xxx xxx </strong>. Entrez le code reçu ci-dessous <br />{" "}
+          <strong>{tel} </strong>. Entrez le code reçu ci-dessous <br />{" "}
           pour confirmer votre identité
         </p>
 

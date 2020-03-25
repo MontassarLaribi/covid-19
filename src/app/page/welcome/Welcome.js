@@ -281,7 +281,7 @@ const Welcome = props => {
           />
         )}
         <InformModal modalAction={props.ModalAction} />
-        <Sms history={history} modalAction={props.ModalAction} />
+        <Sms tel={responses&& responses.phoneNumber} history={history} modalAction={props.ModalAction} />
       </div>
     </div>
   );

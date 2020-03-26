@@ -32,7 +32,7 @@ const QuestionEducation = props => {
   };
 
   const handleText = data => {
-    if (new RegExp(/^[0-9]{1,2}$/).test(data)) {
+    if (new RegExp(/^[0-9]{1,3}$/).test(data)) {
       props.getState({
         field: "responses",
         value: data,
@@ -46,7 +46,6 @@ const QuestionEducation = props => {
       setError(true);
     }
   };
-  console.log("props", props);
   return (
     <div className="question-item">
       <h5>{props.title}</h5>

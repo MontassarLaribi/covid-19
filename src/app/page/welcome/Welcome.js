@@ -109,6 +109,7 @@ const Welcome = props => {
       }
     }
   ];
+
   const renderLabelCategroy = cat => {
     switch (cat) {
       case "CATEGORY_GENERAL":
@@ -121,6 +122,7 @@ const Welcome = props => {
         break;
     }
   };
+
   useEffect(() => {
     axios
       .get(`${DOMAINE}/api/v1/question`)
@@ -164,16 +166,19 @@ const Welcome = props => {
       });
       setlengthFormDynamic(lengthFormDynamic + 1);
     }
-    console.log("newResponse", newResponse);
+    // console.log("newResponse", newResponse);
     setReponse(newResponse);
   };
+
   const submitForm = data => {
     const newData = { ...responses, ...data };
     console.log("newData", newData);
     axios.post(`${DOMAINE}/api/v1/patient`, { ...newData }).then(res => {
+      console.log(res);
       props.ModalAction("sms");
     });
   };
+
   return (
     <div className="welcome-page">
       <div className={classes.samu}>

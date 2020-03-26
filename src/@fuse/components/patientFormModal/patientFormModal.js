@@ -4,12 +4,13 @@ import { Button, MenuItem } from "@material-ui/core";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
-import * as React from "react";
+import React, { useEffect } from "react";
 import { withRouter } from "react-router-dom";
-import { Recorder } from "react-voice-recorder";
 import * as yup from "yup";
 import QuestionEducation from "./QuestionEducation";
 import LoiSnack from "../loiSnack";
+import { useState } from "react";
+import { ReactMediaRecorder } from "react-media-recorder";
 
 const PatientSchema = yup.object().shape({
   mytel: yup
@@ -25,15 +26,7 @@ const PatientSchema = yup.object().shape({
   nom: yup.string().required("Champ nom est requis"),
   adresse: yup.string().required("Champ adresse est requis"),
   prenom: yup.string().required("Champ prenom est requis"),
-  sexe: yup.string().required("Champ sexe est requis"),
-  age: yup
-    .number("Nombre positif")
-    .required("Champ age est requis")
-    .typeError("age must be a number")
-    .positive("Nombre positif")
-    .integer("Nombre positif")
-    .min(0)
-    .max(120)
+  sexe: yup.string().required("Champ sexe est requis")
 });
 
 const PatientFormModal = ({
@@ -52,14 +45,41 @@ const PatientFormModal = ({
     updateResponse(data);
   };
 
-  const handleAudioStop = data => {
-    //     var reader = new FileReader();
-    //  reader.readAsDataURL(data);
-    //  reader.onloadend = function() {
-    //      var base64data = reader.result;
-    //      console.log('ssssssss',base64data);
-    //  }
-  };
+  const [audioConfig, setAudioConfig] = useState({
+    status: "idle",
+    mediaBlobUrl: ""
+  });
+
+  const [audio, setAudio] = useState(null);
+
+  // TIMER START
+  const [mSeconds, setMSeconds] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+
+  function toggle() {
+    setIsActive(!isActive);
+  }
+
+  function reset() {
+    setMSeconds(0);
+    setIsActive(false);
+  }
+
+  useEffect(() => {
+    let interval = null;
+    if (isActive && mSeconds < 60) {
+      interval = setInterval(() => {
+        setMSeconds(mSeconds => mSeconds + 1);
+      }, 1000);
+    } else if (!isActive && mSeconds !== 0) {
+      clearInterval(interval);
+    }
+    if (mSeconds >= 60) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isActive, mSeconds]);
+  // TIMER END
 
   console.log("dynamicCount,  staticCount,", dynamicCount, staticCount);
 
@@ -92,11 +112,65 @@ const PatientFormModal = ({
             })}
           <h4 className="personnal-question-title-audio">MESSAGE VOCAL</h4>
           <div>
-            <Recorder
-              record={true}
-              // title={"New recording"}
-              showUIAudio
-              handleAudioStop={data => handleAudioStop(data)}
+            <div>
+              <div class="btncontainer">
+                <input id="btn" type="checkbox" />
+                <label for="btn"></label>
+                <div class="time">
+                  <div class="h_m"></div>
+                  <div class="s_ms"></div>
+                </div>
+              </div>
+            </div>
+            <ReactMediaRecorder
+              audio
+              onStop={async mediaBlobUrl => {
+                setAudioConfig({ status: "stopped", mediaBlobUrl });
+                let blob = await fetch(audioConfig.mediaBlobUrl).then(r => {
+                  return r.blob();
+                });
+                var reader = new window.FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = function() {
+                  let base64 = reader.result;
+                  base64 = base64.split(",")[1];
+                  setAudio(base64);
+                  console.log(base64);
+                };
+              }}
+              render={({
+                status,
+                startRecording,
+                stopRecording,
+                mediaBlobUrl
+              }) => {
+                return (
+                  <div>
+                    <p>{status}</p>
+                    <button
+                      onClick={() => {
+                        startRecording();
+                        toggle();
+                      }}
+                    >
+                      Start Recording
+                    </button>
+                    <button
+                      onClick={() => {
+                        stopRecording();
+                        toggle();
+                      }}
+                    >
+                      Stop Recording
+                    </button>
+                    <audio
+                      src={mediaBlobUrl}
+                      controls
+                      controlsList="nodownload"
+                    />
+                  </div>
+                );
+              }}
             />
           </div>
 
@@ -108,7 +182,8 @@ const PatientFormModal = ({
               prenom: "",
               adresse: "",
               mytel: "",
-              zipcode: ""
+              zipcode: "",
+              sexe: "H"
             }}
             validationSchema={PatientSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -117,7 +192,9 @@ const PatientFormModal = ({
                 lastName: values.nom,
                 address: values.adresse,
                 zipCode: values.zipcode,
-                phoneNumber: values.mytel
+                phoneNumber: values.mytel,
+                sexe: values.sexe,
+                audio: audio
               };
               submitFormCallback(caste);
             }}
@@ -140,6 +217,7 @@ const PatientFormModal = ({
                       type="text"
                       label="Nom"
                       name="nom"
+                      value={values.nom}
                       variant="outlined"
                       style={{
                         margin: "0 12px"
@@ -150,6 +228,7 @@ const PatientFormModal = ({
                       type="text"
                       label="Prenom"
                       name="prenom"
+                      value={values.prenom}
                       variant="outlined"
                       style={{
                         margin: "0 12px"
@@ -166,6 +245,7 @@ const PatientFormModal = ({
                       type="text"
                       label="Adress"
                       name="adresse"
+                      value={values.adresse}
                       variant="outlined"
                       style={{
                         margin: "0 12px"
@@ -174,6 +254,7 @@ const PatientFormModal = ({
                     <Field
                       select
                       component={TextField}
+                      label="sexe"
                       variant="outlined"
                       fullwidth="true"
                       style={{
@@ -181,10 +262,7 @@ const PatientFormModal = ({
                       }}
                       name="sexe"
                       id="sexe"
-                      value="H"
-                      inputProps={{
-                        value: "H"
-                      }}
+                      value={values.sexe}
                     >
                       <MenuItem value={"H"}>Homme</MenuItem>
                       <MenuItem value={"F"}>Femme</MenuItem>
@@ -200,6 +278,7 @@ const PatientFormModal = ({
                       type="text"
                       label="Numero de telephone"
                       name="mytel"
+                      value={values.mytel}
                       variant="outlined"
                       style={{
                         margin: "0 12px"
@@ -211,6 +290,7 @@ const PatientFormModal = ({
                       type="text"
                       label="Zip Code"
                       name="zipcode"
+                      value={values.zipcode}
                       variant="outlined"
                       style={{
                         margin: "0 12px"
@@ -236,11 +316,12 @@ const PatientFormModal = ({
                       color="primary"
                       disabled={isSubmitting}
                       onClick={() => {
-                        if (staticCount === dynamicCount) {
-                          submitForm();
-                        } else {
-                          alert("Merci de répondre à toutes les questions");
-                        }
+                        submitForm();
+                        // if (staticCount === dynamicCount && audio) {
+                        //   submitForm();
+                        // } else {
+                        //   alert("Merci de répondre à toutes les questions");
+                        // }
                       }}
                     >
                       Valider

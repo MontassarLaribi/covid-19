@@ -69,14 +69,14 @@ const PatientFormModal = ({
 
   useEffect(() => {
     let interval = null;
-    if (isActive && mSeconds < 5) {
+    if (isActive && mSeconds < 60) {
       interval = setInterval(() => {
         setMSeconds(mSeconds => mSeconds + 1);
       }, 1000);
     } else if (!isActive && mSeconds !== 0) {
       clearInterval(interval);
     }
-    if (mSeconds >= 5) {
+    if (mSeconds >= 60) {
       clearInterval(interval);
       document.getElementById("stopRecording").click();
       reset();

@@ -11,6 +11,8 @@ import QuestionEducation from "./QuestionEducation";
 import LoiSnack from "../loiSnack";
 import { useState } from "react";
 import { ReactMediaRecorder } from "react-media-recorder";
+import IconButton from "@material-ui/core/IconButton";
+import MicIcon from "@material-ui/icons/Mic";
 
 const PatientSchema = yup.object().shape({
   mytel: yup
@@ -67,15 +69,17 @@ const PatientFormModal = ({
 
   useEffect(() => {
     let interval = null;
-    if (isActive && mSeconds < 60) {
+    if (isActive && mSeconds < 5) {
       interval = setInterval(() => {
         setMSeconds(mSeconds => mSeconds + 1);
       }, 1000);
     } else if (!isActive && mSeconds !== 0) {
       clearInterval(interval);
     }
-    if (mSeconds >= 60) {
+    if (mSeconds >= 5) {
       clearInterval(interval);
+      document.getElementById("stopRecording").click();
+      reset();
     }
     return () => clearInterval(interval);
   }, [isActive, mSeconds]);
@@ -112,16 +116,6 @@ const PatientFormModal = ({
             })}
           <h4 className="personnal-question-title-audio">MESSAGE VOCAL</h4>
           <div>
-            <div>
-              <div class="btncontainer">
-                <input id="btn" type="checkbox" />
-                <label for="btn"></label>
-                <div class="time">
-                  <div class="h_m"></div>
-                  <div class="s_ms"></div>
-                </div>
-              </div>
-            </div>
             <ReactMediaRecorder
               audio
               onStop={async mediaBlobUrl => {
@@ -144,31 +138,51 @@ const PatientFormModal = ({
                 stopRecording,
                 mediaBlobUrl
               }) => {
+                if (!isActive && status !== "idle") {
+                  // stopRecording();
+                }
                 return (
-                  <div>
-                    <p>{status}</p>
-                    <button
-                      onClick={() => {
-                        startRecording();
-                        toggle();
-                      }}
-                    >
-                      Start Recording
-                    </button>
-                    <button
-                      onClick={() => {
-                        stopRecording();
-                        toggle();
-                      }}
-                    >
-                      Stop Recording
-                    </button>
-                    <audio
-                      src={mediaBlobUrl}
-                      controls
-                      controlsList="nodownload"
-                    />
-                  </div>
+                  <>
+                    <label>
+                      Vous avez 60 secondes pour décrire votre état et pour
+                      qu'on puisse mieux vous diagnostiquer
+                    </label>
+                    <div style={{ textAlign: "center" }}>
+                      <IconButton
+                        color={isActive ? "secondary" : "primary"}
+                        aria-label="record"
+                        onClick={() => {
+                          if (isActive) {
+                            stopRecording();
+                            toggle();
+                          } else {
+                            startRecording();
+                            toggle();
+                          }
+                        }}
+                      >
+                        <MicIcon />
+                      </IconButton>
+                      <p>
+                        {status === "recording"
+                          ? "en écoute " + mSeconds + " secondes"
+                          : "arreté"}
+                      </p>
+                      <button
+                        id="stopRecording"
+                        style={{ display: "none" }}
+                        onClick={() => {
+                          stopRecording();
+                          toggle();
+                        }}
+                      ></button>
+                      <audio
+                        src={mediaBlobUrl}
+                        controls
+                        controlsList="nodownload"
+                      />
+                    </div>
+                  </>
                 );
               }}
             />

@@ -260,9 +260,11 @@ const ClaimDialog = ({
                 </Button>
               </div>
               <div className="sms">
+                <row>
                 <Button
                   variant="outlined"
                   size="large"
+                  // style="align:right"
                   onClick={() => {
                     onSendSMS(condition);
                     setCondition(null);
@@ -272,6 +274,17 @@ const ClaimDialog = ({
                 >
                   envoyer sms
                 </Button>
+                </row>
+                <row>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => {
+                  }}
+                >
+                  Dénoncier du patinet 
+                </Button>
+                </row>
               </div>
             </div>
           </Grid>

@@ -26,6 +26,8 @@ import {
 } from "formik-material-ui-pickers"; */
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import {Recorder} from 'react-voice-recorder'
+
 
 const PatientFormModal = ({
   staticCount,
@@ -65,6 +67,17 @@ const PatientFormModal = ({
   const getAllState = data => {
     updateResponse(data);
   };
+
+  const handleAudioStop =(data)=>{
+//     var reader = new FileReader();
+//  reader.readAsDataURL(data); 
+//  reader.onloadend = function() {
+//      var base64data = reader.result;                
+//      console.log('ssssssss',base64data);
+//  }
+  
+
+}
   console.log("dynamicCount,  staticCount,", dynamicCount, staticCount);
   return (
     <Modal className="patientForm" id="PatientForm" ModalAction={modalAction}>
@@ -91,6 +104,19 @@ const PatientFormModal = ({
               </div>
             );
           })}
+<h4 className="personnal-question-title-audio">MESSAGE VOCAL</h4>
+<div>
+
+<Recorder
+    record={true}
+   // title={"New recording"}
+    showUIAudio
+    handleAudioStop={data => handleAudioStop(data)}
+  
+/>
+</div>
+
+
         <h4 className="personnal-question-title">Données Personnelles</h4>
         <Formik
           initialValues={{
